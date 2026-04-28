@@ -1,47 +1,120 @@
-<div class="app-layout">
-  <nav class="sidebar">
-    <div class="logo">
-      <span class="logo-icon">⚡</span>
-      <span class="logo-text">AI Academy</span>
-    </div>
+@if (showGate) {
+  <div class="access-gate">
+    <div class="gate-container">
+      @if (gateStep() === null || gateStep() === 'pricing') {
+        <!-- Pricing Screen -->
+        <div class="gate-header">
+          <div class="gate-logo">
+            <span class="gate-logo-icon">⚡</span>
+            <h1>AI Academy</h1>
+          </div>
+          <p class="gate-subtitle">Master AI Agent Orchestration</p>
+          <p class="gate-desc">10 modules, 54 lessons, interactive playground — from fundamentals to production-ready agent systems.</p>
+        </div>
 
-    <div class="lang-switcher">
-      <button
-        class="lang-btn"
-        [class.active]="i18n.currentLang() === 'en'"
-        (click)="i18n.setLang('en')"
-      >EN</button>
-      <button
-        class="lang-btn"
-        [class.active]="i18n.currentLang() === 'es'"
-        (click)="i18n.setLang('es')"
-      >ES</button>
-    </div>
+        <div class="pricing-cards">
+          <div class="pricing-card" (click)="selectPlan('$15')">
+            <div class="plan-price">$15</div>
+            <div class="plan-name">Starter</div>
+            <div class="plan-detail">Individual access</div>
+          </div>
+          <div class="pricing-card featured" (click)="selectPlan('$30')">
+            <div class="plan-badge">POPULAR</div>
+            <div class="plan-price">$30</div>
+            <div class="plan-name">Team</div>
+            <div class="plan-detail">Full team access</div>
+          </div>
+          <div class="pricing-card" (click)="selectPlan('$50')">
+            <div class="plan-price">$50</div>
+            <div class="plan-name">Enterprise</div>
+            <div class="plan-detail">Priority support</div>
+          </div>
+        </div>
 
-    <div class="nav-links">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
-        <span class="nav-icon">📊</span>
-        <span>{{ i18n.t('nav.dashboard') }}</span>
-      </a>
-      <a routerLink="/playground" routerLinkActive="active" class="nav-item">
-        <span class="nav-icon">🧪</span>
-        <span>{{ i18n.t('nav.playground') }}</span>
-      </a>
-      <a routerLink="/progress" routerLinkActive="active" class="nav-item">
-        <span class="nav-icon">📈</span>
-        <span>{{ i18n.t('nav.progress') }}</span>
-      </a>
-    </div>
+        <p class="gate-footer-text">Select a plan to start learning</p>
+      } @else {
+        <!-- Payment / Password Screen -->
+        <div class="payment-screen">
+          <button class="back-btn" (click)="gateStep.set('pricing')">← Back</button>
 
-    <div class="sidebar-footer">
-      <div class="completion-badge">
-        <span class="badge-count">{{ progress.completedCount() }}</span>
-        <span class="badge-label">{{ i18n.t('nav.lessons_done') }}</span>
+          <div class="payment-header">
+            <h2>Complete Payment</h2>
+            <p class="selected-plan">Plan: <strong>{{ selectedPlan() }}</strong></p>
+          </div>
+
+          <div class="qr-section">
+            <img src="payment-qr.jpeg" alt="Scan to pay" class="qr-image" />
+          </div>
+
+          <div class="divider">
+            <span>After payment, enter your access code</span>
+          </div>
+
+          <div class="password-section">
+            <div class="input-group" [class.error]="passwordError()">
+              <input
+                type="password"
+                placeholder="Enter access code"
+                [ngModel]="passwordInput()"
+                (ngModelChange)="passwordInput.set($event)"
+                (keyup.enter)="submitPassword()"
+              />
+              <button class="submit-btn" (click)="submitPassword()">Unlock</button>
+            </div>
+            @if (passwordError()) {
+              <p class="error-msg">Invalid access code. Please try again.</p>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+} @else {
+  <div class="app-layout">
+    <nav class="sidebar">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">AI Academy</span>
       </div>
-    </div>
-  </nav>
 
-  <main class="main-content">
-    <router-outlet />
-  </main>
-</div>
+      <div class="lang-switcher">
+        <button
+          class="lang-btn"
+          [class.active]="i18n.currentLang() === 'en'"
+          (click)="i18n.setLang('en')"
+        >EN</button>
+        <button
+          class="lang-btn"
+          [class.active]="i18n.currentLang() === 'es'"
+          (click)="i18n.setLang('es')"
+        >ES</button>
+      </div>
+
+      <div class="nav-links">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span>{{ i18n.t('nav.dashboard') }}</span>
+        </a>
+        <a routerLink="/playground" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">🧪</span>
+          <span>{{ i18n.t('nav.playground') }}</span>
+        </a>
+        <a routerLink="/progress" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon">📈</span>
+          <span>{{ i18n.t('nav.progress') }}</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="completion-badge">
+          <span class="badge-count">{{ progress.completedCount() }}</span>
+          <span class="badge-label">{{ i18n.t('nav.lessons_done') }}</span>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <router-outlet />
+    </main>
+  </div>
+}
