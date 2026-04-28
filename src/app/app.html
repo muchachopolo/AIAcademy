@@ -1,0 +1,47 @@
+<div class="app-layout">
+  <nav class="sidebar">
+    <div class="logo">
+      <span class="logo-icon">⚡</span>
+      <span class="logo-text">AI Academy</span>
+    </div>
+
+    <div class="lang-switcher">
+      <button
+        class="lang-btn"
+        [class.active]="i18n.currentLang() === 'en'"
+        (click)="i18n.setLang('en')"
+      >EN</button>
+      <button
+        class="lang-btn"
+        [class.active]="i18n.currentLang() === 'es'"
+        (click)="i18n.setLang('es')"
+      >ES</button>
+    </div>
+
+    <div class="nav-links">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-item">
+        <span class="nav-icon">📊</span>
+        <span>{{ i18n.t('nav.dashboard') }}</span>
+      </a>
+      <a routerLink="/playground" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">🧪</span>
+        <span>{{ i18n.t('nav.playground') }}</span>
+      </a>
+      <a routerLink="/progress" routerLinkActive="active" class="nav-item">
+        <span class="nav-icon">📈</span>
+        <span>{{ i18n.t('nav.progress') }}</span>
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="completion-badge">
+        <span class="badge-count">{{ progress.completedCount() }}</span>
+        <span class="badge-label">{{ i18n.t('nav.lessons_done') }}</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <router-outlet />
+  </main>
+</div>
