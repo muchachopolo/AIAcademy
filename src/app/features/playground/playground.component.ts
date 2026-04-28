@@ -189,6 +189,8 @@ interface WorkflowConnection {
                 <option value="plan-execute">{{ i18n.t('playground.pattern_plan') }}</option>
                 <option value="hierarchical">{{ i18n.t('playground.pattern_hierarchical') }}</option>
                 <option value="react">{{ i18n.t('playground.pattern_react') }}</option>
+                <option value="sequential">{{ i18n.t('playground.pattern_sequential') }}</option>
+                <option value="parallel">{{ i18n.t('playground.pattern_parallel') }}</option>
               </select>
             </div>
 
@@ -1822,6 +1824,89 @@ const result = await agent.run(
 // Thought: I should add an LRU eviction policy...
 // Action: writeFile("src/data.ts", updatedCode)
 // Final Answer: Fixed the memory leak by adding LRU.`
+    },
+    {
+      id: 'sequential',
+      icon: '➡️',
+      steps: [
+        { label: 'step_seq_receive', description: 'step_seq_receive_desc', icon: '📥' },
+        { label: 'step_seq_parse', description: 'step_seq_parse_desc', icon: '🔍' },
+        { label: 'step_seq_transform', description: 'step_seq_transform_desc', icon: '🔄' },
+        { label: 'step_seq_validate', description: 'step_seq_validate_desc', icon: '✅' },
+        { label: 'step_seq_output', description: 'step_seq_output_desc', icon: '📤' },
+      ],
+      useCases: ['usecase_seq_1', 'usecase_seq_2', 'usecase_seq_3'],
+      code: `// Sequential Pipeline Pattern
+// Each stage transforms data and passes it to the next
+
+const pipeline = [
+  { name: "parse",     fn: parseInput },
+  { name: "transform", fn: transformData },
+  { name: "validate",  fn: validateOutput },
+  { name: "format",    fn: formatResult },
+];
+
+async function runPipeline(input: string) {
+  let data = input;
+  for (const stage of pipeline) {
+    console.log(\`Stage: \${stage.name}\`);
+    data = await stage.fn(data);
+    // Each stage receives the previous stage's output
+  }
+  return data;
+}
+
+// Real-world example: Jira-to-code pipeline
+const jiraPipeline = [
+  fetchJiraTicket,       // Stage 1: Get ticket details
+  extractRequirements,   // Stage 2: Parse requirements
+  generateCode,          // Stage 3: Claude generates code
+  runTests,              // Stage 4: Validate with tests
+  createPullRequest,     // Stage 5: Output as PR
+];`
+    },
+    {
+      id: 'parallel',
+      icon: '🔀',
+      steps: [
+        { label: 'step_par_receive', description: 'step_par_receive_desc', icon: '📥' },
+        { label: 'step_par_split', description: 'step_par_split_desc', icon: '✂️' },
+        { label: 'step_par_fanout', description: 'step_par_fanout_desc', icon: '🔀' },
+        { label: 'step_par_collect', description: 'step_par_collect_desc', icon: '📦' },
+        { label: 'step_par_merge', description: 'step_par_merge_desc', icon: '🔗' },
+      ],
+      useCases: ['usecase_par_1', 'usecase_par_2', 'usecase_par_3'],
+      code: `// Parallel Fan-Out Pattern
+// Split work across agents, run concurrently, merge results
+
+const agents = {
+  security: new Agent({ role: "security reviewer" }),
+  style:    new Agent({ role: "style checker" }),
+  perf:     new Agent({ role: "performance analyst" }),
+};
+
+async function parallelReview(code: string) {
+  // Fan-out: all agents work simultaneously
+  const results = await Promise.all([
+    agents.security.run(\`Review for vulnerabilities:\\n\${code}\`),
+    agents.style.run(\`Check style & readability:\\n\${code}\`),
+    agents.perf.run(\`Find performance issues:\\n\${code}\`),
+  ]);
+
+  // Collect & merge results
+  const merged = mergeReviews(results);
+  return merged;
+}
+
+// Also useful for multi-source research
+async function research(topic: string) {
+  const sources = await Promise.all([
+    searchDocs(topic),
+    searchCodebase(topic),
+    searchStackOverflow(topic),
+  ]);
+  return synthesize(sources);
+}`
     }
   ];
 
@@ -2024,6 +2109,43 @@ const result = await agent.run(
         { role: 'agent', content: 'OBSERVATION: Changes written. I need to verify they work by running tests.', thinking: 'ReAct loop iteration 4: Never assume a fix works — always verify with concrete evidence.', timestamp: now(), patternTag: 'OBSERVATION', coachNote: g ? this.i18n.t('playground.coach_react_5') : undefined },
         { role: 'tool', content: 'All tests passing (12/12)', toolName: 'Run Shell', timestamp: now() },
         { role: 'agent', content: 'THOUGHT: Tests pass. The fix is complete and verified. Each step in my reasoning chain built on the previous observation.', timestamp: now(), patternTag: 'THOUGHT', coachNote: g ? this.i18n.t('playground.coach_react_done') : undefined },
+      ];
+    }
+
+    if (pattern === 'sequential') {
+      return [
+        { role: 'agent', content: `PIPELINE START: I'll process "${task}" through a sequential pipeline with distinct stages. Each stage transforms the output for the next.`, thinking: 'Sequential Pipeline processes data through ordered stages. The output of each stage becomes the input of the next — like an assembly line.', timestamp: now(), patternTag: 'PIPELINE', coachNote: g ? this.i18n.t('playground.coach_seq_1') : undefined },
+        { role: 'system', content: 'Stage 1 of 4: PARSE — Analyzing and parsing the input task...', timestamp: now(), patternTag: 'STAGE 1', coachNote: g ? this.i18n.t('playground.coach_seq_2') : undefined },
+        { role: 'tool', content: 'Searching codebase for relevant files and context...', toolName: 'Search Code', timestamp: now() },
+        { role: 'agent', content: 'Parse stage complete: Identified 3 files to modify, extracted requirements, and mapped dependencies between them.', thinking: 'Stage 1 output: structured task breakdown with file list and dependency graph. This feeds into Stage 2.', timestamp: now(), patternTag: 'STAGE 1' },
+        { role: 'system', content: 'Stage 2 of 4: TRANSFORM — Applying changes based on parsed requirements...', timestamp: now(), patternTag: 'STAGE 2', coachNote: g ? this.i18n.t('playground.coach_seq_3') : undefined },
+        { role: 'tool', content: 'Reading service.ts (112 lines), controller.ts (87 lines)', toolName: 'Read File', timestamp: now() },
+        { role: 'tool', content: 'Updated service.ts: refactored data layer (+24 lines, -8 lines)', toolName: 'Write File', timestamp: now() },
+        { role: 'tool', content: 'Updated controller.ts: new endpoint added (+18 lines)', toolName: 'Write File', timestamp: now() },
+        { role: 'agent', content: 'Transform stage complete: All code changes applied. Output is the modified codebase ready for validation.', thinking: 'Stage 2 output: transformed code files. The key rule of pipelines — each stage only does ONE thing well.', timestamp: now(), patternTag: 'STAGE 2' },
+        { role: 'system', content: 'Stage 3 of 4: VALIDATE — Running tests and checks on transformed output...', timestamp: now(), patternTag: 'STAGE 3', coachNote: g ? this.i18n.t('playground.coach_seq_4') : undefined },
+        { role: 'tool', content: 'Running test suite... 11 tests passed, 0 failed. Linting: 0 errors.', toolName: 'Run Shell', timestamp: now() },
+        { role: 'agent', content: 'Validate stage complete: All tests pass, no lint errors. Output is verified code ready for final stage.', thinking: 'Stage 3 confirms the transformation was correct. If tests failed, the pipeline would halt here — fail fast principle.', timestamp: now(), patternTag: 'STAGE 3' },
+        { role: 'system', content: 'Stage 4 of 4: OUTPUT — Producing final deliverable...', timestamp: now(), patternTag: 'STAGE 4', coachNote: g ? this.i18n.t('playground.coach_seq_5') : undefined },
+        { role: 'tool', content: 'Created commit: "feat: implement task changes" and opened PR #47', toolName: 'Git', timestamp: now() },
+        { role: 'agent', content: 'Pipeline complete! Task flowed through 4 stages: Parse > Transform > Validate > Output. Each stage had a single responsibility.', timestamp: now(), coachNote: g ? this.i18n.t('playground.coach_seq_done') : undefined },
+      ];
+    }
+
+    if (pattern === 'parallel') {
+      return [
+        { role: 'agent', content: `PARALLEL FAN-OUT: I'll split "${task}" into independent subtasks and run them concurrently for maximum speed.`, thinking: 'Parallel Fan-Out identifies independent subtasks that can run simultaneously. Key insight: tasks with no dependencies between them are perfect candidates.', timestamp: now(), patternTag: 'COORDINATOR', coachNote: g ? this.i18n.t('playground.coach_par_1') : undefined },
+        { role: 'system', content: 'Analyzing task and splitting into independent subtasks...', timestamp: now(), patternTag: 'SPLIT', coachNote: g ? this.i18n.t('playground.coach_par_2') : undefined },
+        { role: 'agent', content: 'Task split into 3 parallel subtasks:\n  1. Security review of changes\n  2. Code style & readability check\n  3. Performance impact analysis', thinking: 'These three reviews are independent — none needs the output of another. Perfect for parallel execution.', timestamp: now(), patternTag: 'SPLIT' },
+        { role: 'system', content: 'FAN-OUT: Launching 3 agents in parallel...', timestamp: now(), patternTag: 'FAN-OUT', coachNote: g ? this.i18n.t('playground.coach_par_3') : undefined },
+        { role: 'tool', content: 'Searching for security patterns: SQL injection, XSS, auth bypass...', toolName: 'Search Code', timestamp: now() },
+        { role: 'agent', content: '[Agent 1 - Security]: Found 1 potential issue — unvalidated user input on line 45 of handler.ts. Severity: medium.', thinking: 'Security agent focuses only on vulnerabilities. Specialization within parallel execution.', timestamp: now(), patternTag: 'PARALLEL-1' },
+        { role: 'tool', content: 'Reading all modified files for style analysis...', toolName: 'Read File', timestamp: now() },
+        { role: 'agent', content: '[Agent 2 - Style]: Code follows project conventions. Suggestion: extract repeated logic on lines 23-31 into a helper function.', thinking: 'Style agent reviews readability and maintainability independently of the security agent.', timestamp: now(), patternTag: 'PARALLEL-2' },
+        { role: 'tool', content: 'Running performance benchmarks on changed code paths...', toolName: 'Run Shell', timestamp: now() },
+        { role: 'agent', content: '[Agent 3 - Performance]: No regressions detected. New endpoint responds in ~12ms, well within the 100ms budget.', thinking: 'Performance agent runs benchmarks concurrently while other agents do their reviews.', timestamp: now(), patternTag: 'PARALLEL-3', coachNote: g ? this.i18n.t('playground.coach_par_4') : undefined },
+        { role: 'system', content: 'COLLECT: All 3 parallel agents have completed. Gathering results...', timestamp: now(), patternTag: 'COLLECT', coachNote: g ? this.i18n.t('playground.coach_par_5') : undefined },
+        { role: 'agent', content: 'MERGE: Synthesizing results from all agents into a unified report:\n- Security: 1 medium issue found (input validation)\n- Style: 1 suggestion (extract helper)\n- Performance: All clear, no regressions\n\nOverall: Address the input validation issue before merging.', timestamp: now(), patternTag: 'MERGE', coachNote: g ? this.i18n.t('playground.coach_par_done') : undefined },
       ];
     }
 

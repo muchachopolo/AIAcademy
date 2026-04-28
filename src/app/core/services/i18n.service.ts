@@ -103,11 +103,15 @@ const translations: Record<Lang, Record<string, string>> = {
     'playground.pattern_plan-execute': 'Plan & Execute',
     'playground.pattern_hierarchical': 'Hierarchical (Multi-Agent)',
     'playground.pattern_react': 'ReAct (Reasoning + Acting)',
+    'playground.pattern_sequential': 'Sequential Pipeline',
+    'playground.pattern_parallel': 'Parallel Fan-Out',
     'playground.pattern_plan': 'Plan & Execute',
     'playground.pattern_desc_single': 'One agent handles everything — reasoning, tool use, and responding — in a single loop. Simple, effective for straightforward tasks.',
     'playground.pattern_desc_plan-execute': 'First create a complete plan, then execute each step sequentially. If a step fails, re-plan. Great for complex multi-step tasks.',
     'playground.pattern_desc_hierarchical': 'A manager agent delegates tasks to specialist agents (planner, coder, tester). Each specialist is expert in their domain.',
     'playground.pattern_desc_react': 'The agent explicitly alternates between Thought, Action, and Observation. Each cycle refines understanding before the next action.',
+    'playground.pattern_desc_sequential': 'Data flows through ordered stages — each stage transforms the output and passes it to the next. Like an assembly line for tasks.',
+    'playground.pattern_desc_parallel': 'A task is split into independent subtasks that run concurrently across multiple agents. Results are collected and merged at the end.',
 
     // Pattern Steps
     'playground.step_receive': 'Receive Task',
@@ -145,6 +149,30 @@ const translations: Record<Lang, Record<string, string>> = {
     'playground.step_loop': 'Loop',
     'playground.step_loop_desc': 'Repeat until task is solved',
 
+    // Sequential Pipeline Steps
+    'playground.step_seq_receive': 'Receive Task',
+    'playground.step_seq_receive_desc': 'Input enters the pipeline',
+    'playground.step_seq_parse': 'Stage 1: Parse',
+    'playground.step_seq_parse_desc': 'Analyze and structure the input',
+    'playground.step_seq_transform': 'Stage 2: Transform',
+    'playground.step_seq_transform_desc': 'Apply changes to the data',
+    'playground.step_seq_validate': 'Stage 3: Validate',
+    'playground.step_seq_validate_desc': 'Check correctness of output',
+    'playground.step_seq_output': 'Stage 4: Output',
+    'playground.step_seq_output_desc': 'Produce the final deliverable',
+
+    // Parallel Fan-Out Steps
+    'playground.step_par_receive': 'Receive Task',
+    'playground.step_par_receive_desc': 'Task arrives for processing',
+    'playground.step_par_split': 'Split',
+    'playground.step_par_split_desc': 'Divide into independent subtasks',
+    'playground.step_par_fanout': 'Fan-Out',
+    'playground.step_par_fanout_desc': 'Run agents in parallel',
+    'playground.step_par_collect': 'Collect',
+    'playground.step_par_collect_desc': 'Gather results from all agents',
+    'playground.step_par_merge': 'Merge',
+    'playground.step_par_merge_desc': 'Synthesize into unified output',
+
     // Use Cases
     'playground.usecase_single_1': 'Simple coding tasks like fixing a bug or adding a feature',
     'playground.usecase_single_2': 'Quick lookups, file edits, and one-shot operations',
@@ -158,6 +186,12 @@ const translations: Record<Lang, Record<string, string>> = {
     'playground.usecase_react_1': 'Debugging unknown issues that need investigation',
     'playground.usecase_react_2': 'Exploratory tasks where the path isn\'t clear upfront',
     'playground.usecase_react_3': 'When you want transparent, explainable reasoning',
+    'playground.usecase_seq_1': 'Data processing and ETL (extract, transform, load) workflows',
+    'playground.usecase_seq_2': 'Jira-to-code pipelines: ticket → requirements → code → tests → PR',
+    'playground.usecase_seq_3': 'Any workflow where each stage has a single responsibility',
+    'playground.usecase_par_1': 'Code review with parallel checks (security + style + performance)',
+    'playground.usecase_par_2': 'Multi-source research: search docs, codebase, and web simultaneously',
+    'playground.usecase_par_3': 'Independent subtasks where parallelism saves significant time',
 
     // Playground — Simulator
     'playground.config': 'Configuration',
@@ -236,6 +270,22 @@ const translations: Record<Lang, Record<string, string>> = {
     'playground.coach_react_5': 'Even after writing a fix, the agent observes the result. In ReAct, you never assume — you always verify.',
     'playground.coach_react_done': 'ReAct completed! Notice how every decision was explainable. This transparency makes ReAct ideal for debugging and auditing.',
 
+    // Coach — Sequential Pipeline
+    'playground.coach_seq_1': 'SEQUENTIAL PIPELINE: Data flows through ordered stages like an assembly line. Each stage has ONE job and passes its output to the next.',
+    'playground.coach_seq_2': 'Stage 1 is PARSE: the pipeline analyzes the raw input and structures it. Good pipelines always start by understanding the input.',
+    'playground.coach_seq_3': 'Stage 2 is TRANSFORM: this is where the actual work happens. The stage receives structured data from Parse and applies changes.',
+    'playground.coach_seq_4': 'Stage 3 is VALIDATE: the pipeline checks that the transformation was correct. If validation fails, the pipeline halts — fail fast!',
+    'playground.coach_seq_5': 'Stage 4 is OUTPUT: the final stage produces the deliverable. Each stage only needed to focus on its single responsibility.',
+    'playground.coach_seq_done': 'Pipeline complete! The power of Sequential Pipeline: clear data flow, single-responsibility stages, and easy debugging since you can inspect output at each stage.',
+
+    // Coach — Parallel Fan-Out
+    'playground.coach_par_1': 'PARALLEL FAN-OUT: The key insight is identifying tasks that are INDEPENDENT — they don\'t need each other\'s output to run.',
+    'playground.coach_par_2': 'The SPLIT phase analyzes the task and divides it into subtasks. Critical: only truly independent work should be parallelized.',
+    'playground.coach_par_3': 'FAN-OUT: Multiple agents launch simultaneously! This is where you get the speed benefit — N agents working at once instead of sequentially.',
+    'playground.coach_par_4': 'Each parallel agent specializes in one aspect. They work independently and don\'t communicate with each other during execution.',
+    'playground.coach_par_5': 'COLLECT phase: All agents have finished. Now we gather their individual results before merging.',
+    'playground.coach_par_done': 'Fan-out complete! The merge phase synthesizes all parallel results into one coherent output. This pattern shines when subtasks are independent and time-sensitive.',
+
     // Playground — Builder
     'playground.components': 'Components',
     'playground.palette_hint': 'Click a component to add it to your workflow pipeline.',
@@ -272,6 +322,8 @@ const translations: Record<Lang, Record<string, string>> = {
     'playground.detected_desc_plan-execute': 'Multiple agents with conditions suggest a Plan & Execute pattern.',
     'playground.detected_desc_hierarchical': 'Three or more agents indicate a hierarchical multi-agent orchestration.',
     'playground.detected_desc_react': 'An agent with multiple tools and conditions matches the ReAct pattern.',
+    'playground.detected_desc_sequential': 'A linear chain of agents and tools suggests a Sequential Pipeline pattern.',
+    'playground.detected_desc_parallel': 'Multiple agents without dependencies indicate a Parallel Fan-Out pattern.',
 
     // Progress
     'progress.title': 'My Learning Progress',
@@ -396,11 +448,15 @@ const translations: Record<Lang, Record<string, string>> = {
     'playground.pattern_plan-execute': 'Planificar y Ejecutar',
     'playground.pattern_hierarchical': 'Jerárquico (Multi-Agente)',
     'playground.pattern_react': 'ReAct (Razonamiento + Acción)',
+    'playground.pattern_sequential': 'Pipeline Secuencial',
+    'playground.pattern_parallel': 'Fan-Out Paralelo',
     'playground.pattern_plan': 'Planificar y Ejecutar',
     'playground.pattern_desc_single': 'Un agente maneja todo — razonamiento, uso de herramientas y respuesta — en un solo bucle. Simple y efectivo para tareas directas.',
     'playground.pattern_desc_plan-execute': 'Primero crea un plan completo, luego ejecuta cada paso secuencialmente. Si un paso falla, re-planifica. Ideal para tareas complejas.',
     'playground.pattern_desc_hierarchical': 'Un agente gerente delega tareas a agentes especialistas (planificador, programador, tester). Cada especialista es experto en su dominio.',
     'playground.pattern_desc_react': 'El agente alterna explícitamente entre Pensamiento, Acción y Observación. Cada ciclo refina la comprensión antes de la siguiente acción.',
+    'playground.pattern_desc_sequential': 'Los datos fluyen a través de etapas ordenadas — cada etapa transforma la salida y la pasa a la siguiente. Como una línea de ensamblaje para tareas.',
+    'playground.pattern_desc_parallel': 'Una tarea se divide en subtareas independientes que se ejecutan concurrentemente en múltiples agentes. Los resultados se recopilan y fusionan al final.',
 
     // Pattern Steps
     'playground.step_receive': 'Recibir Tarea',
@@ -438,6 +494,30 @@ const translations: Record<Lang, Record<string, string>> = {
     'playground.step_loop': 'Bucle',
     'playground.step_loop_desc': 'Repetir hasta resolver la tarea',
 
+    // Pasos del Pipeline Secuencial
+    'playground.step_seq_receive': 'Recibir Tarea',
+    'playground.step_seq_receive_desc': 'La entrada ingresa al pipeline',
+    'playground.step_seq_parse': 'Etapa 1: Analizar',
+    'playground.step_seq_parse_desc': 'Analizar y estructurar la entrada',
+    'playground.step_seq_transform': 'Etapa 2: Transformar',
+    'playground.step_seq_transform_desc': 'Aplicar cambios a los datos',
+    'playground.step_seq_validate': 'Etapa 3: Validar',
+    'playground.step_seq_validate_desc': 'Verificar la corrección de la salida',
+    'playground.step_seq_output': 'Etapa 4: Salida',
+    'playground.step_seq_output_desc': 'Producir el entregable final',
+
+    // Pasos del Fan-Out Paralelo
+    'playground.step_par_receive': 'Recibir Tarea',
+    'playground.step_par_receive_desc': 'La tarea llega para procesamiento',
+    'playground.step_par_split': 'Dividir',
+    'playground.step_par_split_desc': 'Dividir en subtareas independientes',
+    'playground.step_par_fanout': 'Fan-Out',
+    'playground.step_par_fanout_desc': 'Ejecutar agentes en paralelo',
+    'playground.step_par_collect': 'Recopilar',
+    'playground.step_par_collect_desc': 'Reunir resultados de todos los agentes',
+    'playground.step_par_merge': 'Fusionar',
+    'playground.step_par_merge_desc': 'Sintetizar en una salida unificada',
+
     // Use Cases
     'playground.usecase_single_1': 'Tareas simples de código como corregir un bug o agregar una función',
     'playground.usecase_single_2': 'Búsquedas rápidas, ediciones de archivos y operaciones únicas',
@@ -451,6 +531,12 @@ const translations: Record<Lang, Record<string, string>> = {
     'playground.usecase_react_1': 'Depuración de problemas desconocidos que necesitan investigación',
     'playground.usecase_react_2': 'Tareas exploratorias donde el camino no está claro de antemano',
     'playground.usecase_react_3': 'Cuando quieres razonamiento transparente y explicable',
+    'playground.usecase_seq_1': 'Procesamiento de datos y flujos ETL (extraer, transformar, cargar)',
+    'playground.usecase_seq_2': 'Pipelines Jira-a-código: ticket → requisitos → código → tests → PR',
+    'playground.usecase_seq_3': 'Cualquier flujo donde cada etapa tiene una sola responsabilidad',
+    'playground.usecase_par_1': 'Revisión de código con verificaciones paralelas (seguridad + estilo + rendimiento)',
+    'playground.usecase_par_2': 'Investigación multi-fuente: buscar en docs, código y web simultáneamente',
+    'playground.usecase_par_3': 'Subtareas independientes donde el paralelismo ahorra tiempo significativo',
 
     // Playground — Simulator
     'playground.config': 'Configuración',
@@ -529,6 +615,22 @@ const translations: Record<Lang, Record<string, string>> = {
     'playground.coach_react_5': 'Incluso después de escribir un arreglo, el agente observa el resultado. En ReAct, nunca se asume — siempre se verifica.',
     'playground.coach_react_done': '¡ReAct completado! Nota cómo cada decisión fue explicable. Esta transparencia hace a ReAct ideal para depuración y auditoría.',
 
+    // Coach — Pipeline Secuencial
+    'playground.coach_seq_1': 'PIPELINE SECUENCIAL: Los datos fluyen por etapas ordenadas como una línea de ensamblaje. Cada etapa tiene UN trabajo y pasa su salida a la siguiente.',
+    'playground.coach_seq_2': 'Etapa 1 es ANALIZAR: el pipeline analiza la entrada cruda y la estructura. Los buenos pipelines siempre comienzan entendiendo la entrada.',
+    'playground.coach_seq_3': 'Etapa 2 es TRANSFORMAR: aquí es donde ocurre el trabajo real. La etapa recibe datos estructurados de Analizar y aplica cambios.',
+    'playground.coach_seq_4': 'Etapa 3 es VALIDAR: el pipeline verifica que la transformación fue correcta. Si la validación falla, el pipeline se detiene — ¡fallar rápido!',
+    'playground.coach_seq_5': 'Etapa 4 es SALIDA: la etapa final produce el entregable. Cada etapa solo necesitó enfocarse en su única responsabilidad.',
+    'playground.coach_seq_done': '¡Pipeline completo! El poder del Pipeline Secuencial: flujo de datos claro, etapas de responsabilidad única y depuración fácil ya que puedes inspeccionar la salida en cada etapa.',
+
+    // Coach — Fan-Out Paralelo
+    'playground.coach_par_1': 'FAN-OUT PARALELO: La clave es identificar tareas que son INDEPENDIENTES — no necesitan la salida de las demás para ejecutarse.',
+    'playground.coach_par_2': 'La fase DIVIDIR analiza la tarea y la separa en subtareas. Crítico: solo el trabajo verdaderamente independiente debe paralelizarse.',
+    'playground.coach_par_3': '¡FAN-OUT: Múltiples agentes se lanzan simultáneamente! Aquí obtienes el beneficio de velocidad — N agentes trabajando a la vez en lugar de secuencialmente.',
+    'playground.coach_par_4': 'Cada agente paralelo se especializa en un aspecto. Trabajan independientemente y no se comunican entre sí durante la ejecución.',
+    'playground.coach_par_5': 'Fase RECOPILAR: Todos los agentes han terminado. Ahora reunimos sus resultados individuales antes de fusionar.',
+    'playground.coach_par_done': '¡Fan-out completo! La fase de fusión sintetiza todos los resultados paralelos en una salida coherente. Este patrón brilla cuando las subtareas son independientes y el tiempo es crítico.',
+
     // Playground — Builder
     'playground.components': 'Componentes',
     'playground.palette_hint': 'Haz clic en un componente para agregarlo a tu flujo de trabajo.',
@@ -565,6 +667,8 @@ const translations: Record<Lang, Record<string, string>> = {
     'playground.detected_desc_plan-execute': 'Múltiples agentes con condiciones sugieren un patrón de Planificar y Ejecutar.',
     'playground.detected_desc_hierarchical': 'Tres o más agentes indican una orquestación jerárquica multi-agente.',
     'playground.detected_desc_react': 'Un agente con múltiples herramientas y condiciones coincide con el patrón ReAct.',
+    'playground.detected_desc_sequential': 'Una cadena lineal de agentes y herramientas sugiere un patrón de Pipeline Secuencial.',
+    'playground.detected_desc_parallel': 'Múltiples agentes sin dependencias indican un patrón de Fan-Out Paralelo.',
 
     // Progress
     'progress.title': 'Mi Progreso de Aprendizaje',
