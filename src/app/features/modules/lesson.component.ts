@@ -531,16 +531,34 @@ export class LessonComponent implements OnInit {
   }
 
   renderMarkdown(text: string): string {
+    const inlineFmt = (s: string) => s
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/`(.*?)`/g, '<code>$1</code>');
+
+    text = text.replace(/(^\|.+\|.*$\n?)+/gm, (tableBlock) => {
+      const rows = tableBlock.trim().split('\n');
+      let html = '<table>';
+      let isFirstRow = true;
+      for (const row of rows) {
+        const trimmed = row.trim();
+        if (!trimmed) continue;
+        if (/^[\s|:-]+$/.test(trimmed.replace(/-/g, ''))) continue;
+        const cells = trimmed.split('|').filter(c => c.trim() !== '');
+        if (cells.length === 0) continue;
+        const tag = isFirstRow ? 'th' : 'td';
+        html += '<tr>' + cells.map(c => `<${tag}>${inlineFmt(c.trim())}</${tag}>`).join('') + '</tr>';
+        isFirstRow = false;
+      }
+      html += '</table>';
+      return html;
+    });
+
     return text
       .replace(/^### (.*$)/gm, '<h3>$1</h3>')
       .replace(/^## (.*$)/gm, '<h2>$1</h2>')
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/`(.*?)`/g, '<code>$1</code>')
       .replace(/\n\n/g, '</p><p>')
-      .replace(/^\| (.+) \|$/gm, (match) => {
-        const cells = match.split('|').filter(c => c.trim());
-        return '<tr>' + cells.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>';
-      })
       .replace(/^- (.*$)/gm, '<li>$1</li>')
       .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
       .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
