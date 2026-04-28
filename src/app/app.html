@@ -32,6 +32,26 @@
         </div>
 
         <p class="gate-footer-text">Select a plan to start learning</p>
+
+        <div class="divider">
+          <span>Already have an access code?</span>
+        </div>
+
+        <div class="password-section">
+          <div class="input-group" [class.error]="passwordError()">
+            <input
+              type="password"
+              placeholder="Enter access code"
+              [ngModel]="passwordInput()"
+              (ngModelChange)="passwordInput.set($event)"
+              (keyup.enter)="submitPassword()"
+            />
+            <button class="submit-btn" (click)="submitPassword()">Unlock</button>
+          </div>
+          @if (passwordError()) {
+            <p class="error-msg">Invalid access code. Please try again.</p>
+          }
+        </div>
       } @else {
         <!-- Payment / Password Screen -->
         <div class="payment-screen">
