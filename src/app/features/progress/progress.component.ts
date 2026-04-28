@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LearningDataService } from '../../core/services/learning-data.service';
+import { AdvancedLearningDataService } from '../../core/services/advanced-learning-data.service';
 import { ProgressService } from '../../core/services/progress.service';
 import { I18nService } from '../../core/services/i18n.service';
 import { LearningModule } from '../../core/models/learning.model';
@@ -228,10 +229,14 @@ export class ProgressComponent {
 
   constructor(
     private dataService: LearningDataService,
+    private advancedDataService: AdvancedLearningDataService,
     private progress: ProgressService,
     protected i18n: I18nService
   ) {
-    this.modules = this.dataService.getModules();
+    this.modules = [
+      ...this.dataService.getModules(),
+      ...this.advancedDataService.getAdvancedModules()
+    ].sort((a, b) => a.order - b.order);
     this.totalLessons = this.modules.reduce((sum, m) => sum + m.lessons.length, 0);
     this.completedLessons = this.progress.completedCount();
     this.overallProgress = this.totalLessons > 0 ? Math.round((this.completedLessons / this.totalLessons) * 100) : 0;

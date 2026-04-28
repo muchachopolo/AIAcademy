@@ -1,6 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LearningDataService } from '../../core/services/learning-data.service';
+import { AdvancedLearningDataService } from '../../core/services/advanced-learning-data.service';
 import { ProgressService } from '../../core/services/progress.service';
 import { I18nService } from '../../core/services/i18n.service';
 import { Lesson, ContentBlock, QuizQuestion } from '../../core/models/learning.model';
@@ -507,6 +508,7 @@ export class LessonComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private dataService: LearningDataService,
+    private advancedDataService: AdvancedLearningDataService,
     private progress: ProgressService,
     protected i18n: I18nService
   ) {}
@@ -514,7 +516,11 @@ export class LessonComponent implements OnInit {
   ngOnInit() {
     this.moduleId = this.route.snapshot.paramMap.get('moduleId') || '';
     const lessonId = this.route.snapshot.paramMap.get('lessonId') || '';
-    const module = this.dataService.getModules().find(m => m.id === this.moduleId);
+    const allModules = [
+      ...this.dataService.getModules(),
+      ...this.advancedDataService.getAdvancedModules()
+    ];
+    const module = allModules.find(m => m.id === this.moduleId);
     if (module) {
       this.moduleTitle = module.title;
       this.lesson = module.lessons.find(l => l.id === lessonId);

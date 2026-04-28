@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LearningDataService } from '../../core/services/learning-data.service';
+import { AdvancedLearningDataService } from '../../core/services/advanced-learning-data.service';
 import { ProgressService } from '../../core/services/progress.service';
 import { I18nService } from '../../core/services/i18n.service';
 import { LearningModule } from '../../core/models/learning.model';
@@ -199,13 +200,18 @@ export class ModuleDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private dataService: LearningDataService,
+    private advancedDataService: AdvancedLearningDataService,
     private progress: ProgressService,
     protected i18n: I18nService
   ) {}
 
   ngOnInit() {
     const moduleId = this.route.snapshot.paramMap.get('moduleId');
-    this.module = this.dataService.getModules().find(m => m.id === moduleId);
+    const allModules = [
+      ...this.dataService.getModules(),
+      ...this.advancedDataService.getAdvancedModules()
+    ];
+    this.module = allModules.find(m => m.id === moduleId);
   }
 
   isCompleted(lessonId: string): boolean {

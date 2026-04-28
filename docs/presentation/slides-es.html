@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Academy — Presentacion</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-dark: #0f0f1a;
+  --bg-slide: #1a1a2e;
+  --accent: #6c5ce7;
+  --accent-light: #a29bfe;
+  --text: #f0f0f0;
+  --text-muted: #a0a0b0;
+  --gradient: linear-gradient(135deg, #6c5ce7 0%, #00b894 100%);
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg-dark);
+  color: var(--text);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+.presentation {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 8rem;
+  opacity: 0;
+  transform: translateX(100px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  background: var(--bg-slide);
+}
+
+.slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: all;
+}
+
+.slide.exit {
+  opacity: 0;
+  transform: translateX(-100px);
+}
+
+/* Slide types */
+.slide--title {
+  background: var(--bg-dark);
+  text-align: center;
+}
+
+.slide--title h1 {
+  font-size: 4rem;
+  font-weight: 800;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.slide--title .subtitle {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+.slide h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--accent-light);
+}
+
+.slide p, .slide li {
+  font-size: 1.4rem;
+  line-height: 1.8;
+  color: var(--text);
+}
+
+.slide ul {
+  list-style: none;
+  width: 100%;
+  max-width: 900px;
+}
+
+.slide li {
+  padding: 0.5rem 0;
+  padding-left: 2rem;
+  position: relative;
+}
+
+.slide li::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.slide .highlight {
+  color: var(--accent-light);
+  font-weight: 600;
+}
+
+.slide .big-number {
+  font-size: 5rem;
+  font-weight: 800;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.taor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  width: 100%;
+  max-width: 900px;
+}
+
+.taor-item {
+  background: rgba(108, 92, 231, 0.1);
+  border: 1px solid rgba(108, 92, 231, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.taor-item h3 {
+  font-size: 1.3rem;
+  color: var(--accent-light);
+  margin-bottom: 0.5rem;
+}
+
+.taor-item p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+.phases {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 900px;
+}
+
+.phase {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  border-left: 4px solid var(--accent);
+}
+
+.phase-number {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--accent);
+  min-width: 50px;
+}
+
+.phase-content h3 {
+  font-size: 1.2rem;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+}
+
+.phase-content p {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  width: 100%;
+  max-width: 800px;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(108, 92, 231, 0.08);
+  border-radius: 16px;
+  border: 1px solid rgba(108, 92, 231, 0.2);
+}
+
+.stat-card .number {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-card .label {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+.quote {
+  font-size: 2rem;
+  font-style: italic;
+  text-align: center;
+  max-width: 800px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.quote::before { content: '"'; color: var(--accent); font-size: 3rem; }
+.quote::after { content: '"'; color: var(--accent); font-size: 3rem; }
+
+/* Navigation */
+.nav {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 100;
+}
+
+.nav button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: rgba(108, 92, 231, 0.1);
+  color: var(--accent-light);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nav button:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--gradient);
+  transition: width 0.4s;
+  z-index: 100;
+}
+
+.slide-counter {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  z-index: 100;
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+<div class="slide-counter" id="counter"></div>
+
+<div class="presentation" id="deck">
+
+  <!-- Slide 1: Title -->
+  <div class="slide slide--title active">
+    <h1>AI Academy</h1>
+    <p class="subtitle">Orquestacion de Agentes de IA para tu Equipo</p>
+  </div>
+
+  <!-- Slide 2: Hook -->
+  <div class="slide">
+    <h2>Imaginen esto...</h2>
+    <p style="max-width:800px; text-align:center;">
+      Lunes, 9 AM. Abren Jira. Un ticket: <span class="highlight">"Migrar el modulo de pagos a API v3"</span>.
+      <br><br>
+      Antes: 3 dias de trabajo.<br>
+      Hoy: un agente lo lee, planifica, codea, testea y abre un PR.<br><br>
+      <strong>Todo antes del standup.</strong>
+    </p>
+  </div>
+
+  <!-- Slide 3: Problem -->
+  <div class="slide">
+    <h2>El Problema</h2>
+    <ul>
+      <li>Copiar y pegar de ChatGPT no escala</li>
+      <li>Autocompletar con Copilot no es orquestar</li>
+      <li>Estamos usando un Ferrari para ir al supermercado</li>
+    </ul>
+    <br>
+    <p class="quote">La diferencia entre pegar codigo y orquestar agentes es la misma que entre enviar un email y dirigir un equipo</p>
+  </div>
+
+  <!-- Slide 4: Numbers -->
+  <div class="slide">
+    <h2>AI Academy en Numeros</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="number">10</div>
+        <div class="label">Modulos</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">50</div>
+        <div class="label">Lecciones</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">100%</div>
+        <div class="label">Interactivo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: TAOR -->
+  <div class="slide">
+    <h2>El Patron TAOR</h2>
+    <div class="taor-grid">
+      <div class="taor-item">
+        <h3>Pensar</h3>
+        <p>Que necesito saber? Que podria salir mal?</p>
+      </div>
+      <div class="taor-item">
+        <h3>Actuar</h3>
+        <p>Tomar UNA accion especifica y precisa</p>
+      </div>
+      <div class="taor-item">
+        <h3>Observar</h3>
+        <p>Funciono? Que aprendi del resultado?</p>
+      </div>
+      <div class="taor-item">
+        <h3>Repetir</h3>
+        <p>Hasta que el problema este resuelto</p>
+      </div>
+    </div>
+    <br>
+    <p style="color: var(--text-muted); font-size: 1.1rem;">Asi razona Claude Code. Asi van a disenar sus agentes.</p>
+  </div>
+
+  <!-- Slide 6: Learning Path -->
+  <div class="slide">
+    <h2>La Ruta de Aprendizaje</h2>
+    <div class="phases">
+      <div class="phase">
+        <div class="phase-number">1</div>
+        <div class="phase-content">
+          <h3>Fundamentos</h3>
+          <p>LLMs, prompting, herramientas, modelos, token economics</p>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-number">2</div>
+        <div class="phase-content">
+          <h3>Orquestacion</h3>
+          <p>Multi-agente, paralelo, jerarquico, seguridad, costos</p>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-number">3</div>
+        <div class="phase-content">
+          <h3>Arsenal Profundo</h3>
+          <p>TAOR, LangChain, LangGraph, MCP Servers, RAG</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 7: Tech Stack -->
+  <div class="slide">
+    <h2>Lo que Van a Dominar</h2>
+    <ul>
+      <li><span class="highlight">TAOR</span> — El ciclo de razonamiento que hace precisos a los agentes</li>
+      <li><span class="highlight">LangChain</span> — Cadenas, herramientas, memoria persistente</li>
+      <li><span class="highlight">LangGraph</span> — Grafos con estado y rutas condicionales</li>
+      <li><span class="highlight">MCP Servers</span> — Jira + Grafana + Git + DB al alcance del agente</li>
+      <li><span class="highlight">RAG</span> — El agente entiende TODO su codebase</li>
+      <li><span class="highlight">CLAUDE.md</span> — Sus convenciones, heredadas automaticamente</li>
+    </ul>
+  </div>
+
+  <!-- Slide 8: Real World -->
+  <div class="slide">
+    <h2>Aplicacion Real</h2>
+    <ul>
+      <li>Agente que <span class="highlight">revisa PRs</span> — detecta bugs y sugiere fixes con codigo</li>
+      <li>Agente que <span class="highlight">genera documentacion</span> — sincronizada con el codigo</li>
+      <li>Agente de <span class="highlight">respuesta a incidentes</span> — logs, diagnostico, runbooks, post-mortem</li>
+      <li>Pipeline <span class="highlight">Jira-to-Code</span> — del ticket al PR sin intervenir</li>
+    </ul>
+    <br>
+    <p style="color: var(--text-muted);">Cada receta viene con codigo listo para produccion.</p>
+  </div>
+
+  <!-- Slide 9: Impact -->
+  <div class="slide">
+    <h2>Despues de AI Academy</h2>
+    <ul>
+      <li>Convertir tickets en PRs — sin tocar el teclado</li>
+      <li>Disenar sistemas multi-agente para cualquier flujo</li>
+      <li>Elegir el modelo correcto para cada tarea (costo vs calidad)</li>
+      <li>Implementar guardrails para agentes autonomos seguros</li>
+      <li>Medir y optimizar agentes como cualquier sistema en produccion</li>
+    </ul>
+  </div>
+
+  <!-- Slide 10: Closing -->
+  <div class="slide slide--title">
+    <h1>Empecemos</h1>
+    <p class="subtitle" style="max-width:700px;">
+      El equipo que domina la orquestacion de agentes no escribe mas codigo.<br>
+      Escribe <em>mejor pensamiento</em>.
+    </p>
+  </div>
+
+</div>
+
+<div class="nav">
+  <button onclick="prev()">&#8592;</button>
+  <button onclick="next()">&#8594;</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let current = 0;
+
+function showSlide(n) {
+  slides.forEach((s, i) => {
+    s.classList.remove('active', 'exit');
+    if (i < n) s.classList.add('exit');
+    if (i === n) s.classList.add('active');
+  });
+  document.getElementById('progress').style.width = ((n / (slides.length - 1)) * 100) + '%';
+  document.getElementById('counter').textContent = (n + 1) + ' / ' + slides.length;
+}
+
+function next() { if (current < slides.length - 1) { current++; showSlide(current); } }
+function prev() { if (current > 0) { current--; showSlide(current); } }
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+});
+
+document.addEventListener('click', (e) => {
+  if (e.target.tagName !== 'BUTTON') next();
+});
+
+showSlide(0);
+</script>
+</body>
+</html>
