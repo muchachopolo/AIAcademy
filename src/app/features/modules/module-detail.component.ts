@@ -41,7 +41,7 @@ import { LearningModule } from '../../core/models/learning.model';
                     <span class="tag quiz-tag">{{ i18n.t('lesson.quiz') }}</span>
                   }
                   @if (getQuizScore(lesson.id) !== undefined) {
-                    <span class="tag score-tag">Score: {{ getQuizScore(lesson.id) }}%</span>
+                    <span class="tag score-tag">{{ i18n.t('lesson.score_label') }} {{ getQuizScore(lesson.id) }}%</span>
                   }
                 </div>
               </div>

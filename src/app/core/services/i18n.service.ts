@@ -339,6 +339,34 @@ const translations: Record<Lang, Record<string, string>> = {
     'progress.reset': 'Reset All Progress',
     'progress.reset_confirm': 'Are you sure you want to reset all progress? This cannot be undone.',
 
+    // Access Gate
+    'gate.title': 'AI Academy',
+    'gate.subtitle': 'Master AI Agent Orchestration',
+    'gate.desc': '10 modules, 54 lessons, interactive playground — from fundamentals to production-ready agent systems.',
+    'gate.plan_starter': 'Starter',
+    'gate.plan_team': 'Team',
+    'gate.plan_enterprise': 'Enterprise',
+    'gate.detail_starter': 'Individual access',
+    'gate.detail_team': 'Full team access',
+    'gate.detail_enterprise': 'Priority support',
+    'gate.popular': 'POPULAR',
+    'gate.select_plan': 'Select a plan to start learning',
+    'gate.have_code': 'Already have an access code?',
+    'gate.placeholder': 'Enter access code',
+    'gate.unlock': 'Unlock',
+    'gate.error': 'Invalid access code. Please try again.',
+    'gate.back': '← Back',
+    'gate.complete_payment': 'Complete Payment',
+    'gate.plan_label': 'Plan:',
+    'gate.after_payment': 'After payment, enter your access code',
+    'gate.scan_to_pay': 'Scan to pay',
+
+    // Lesson — extra
+    'lesson.interactive_diagram': 'Interactive Diagram:',
+    'lesson.interactive_demo': 'Interactive Agent Demo',
+    'lesson.interactive_exercise': 'Interactive Exercise:',
+    'lesson.score_label': 'Score:',
+
     // Tools
     'tool.read_file': 'Read File',
     'tool.write_file': 'Write File',
@@ -683,6 +711,34 @@ const translations: Record<Lang, Record<string, string>> = {
     'progress.review': 'Repasar',
     'progress.reset': 'Reiniciar Todo el Progreso',
     'progress.reset_confirm': '¿Estás seguro de que quieres reiniciar todo el progreso? Esta acción no se puede deshacer.',
+
+    // Access Gate
+    'gate.title': 'AI Academy',
+    'gate.subtitle': 'Domina la Orquestación de Agentes IA',
+    'gate.desc': '10 módulos, 54 lecciones, laboratorio interactivo — desde fundamentos hasta sistemas de agentes listos para producción.',
+    'gate.plan_starter': 'Inicial',
+    'gate.plan_team': 'Equipo',
+    'gate.plan_enterprise': 'Empresa',
+    'gate.detail_starter': 'Acceso individual',
+    'gate.detail_team': 'Acceso para todo el equipo',
+    'gate.detail_enterprise': 'Soporte prioritario',
+    'gate.popular': 'POPULAR',
+    'gate.select_plan': 'Selecciona un plan para comenzar a aprender',
+    'gate.have_code': '¿Ya tienes un código de acceso?',
+    'gate.placeholder': 'Ingresa el código de acceso',
+    'gate.unlock': 'Desbloquear',
+    'gate.error': 'Código de acceso inválido. Intenta de nuevo.',
+    'gate.back': '← Volver',
+    'gate.complete_payment': 'Completar Pago',
+    'gate.plan_label': 'Plan:',
+    'gate.after_payment': 'Después del pago, ingresa tu código de acceso',
+    'gate.scan_to_pay': 'Escanea para pagar',
+
+    // Lesson — extra
+    'lesson.interactive_diagram': 'Diagrama Interactivo:',
+    'lesson.interactive_demo': 'Demo Interactiva de Agente',
+    'lesson.interactive_exercise': 'Ejercicio Interactivo:',
+    'lesson.score_label': 'Puntuación:',
 
     // Tools
     'tool.read_file': 'Leer Archivo',

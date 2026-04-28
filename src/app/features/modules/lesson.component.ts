@@ -53,7 +53,7 @@ import { Lesson, ContentBlock, QuizQuestion } from '../../core/models/learning.m
                   <div class="diagram-block">
                     <div class="diagram-placeholder">
                       <span>📊</span>
-                      <span>Interactive Diagram: {{ block.content }}</span>
+                      <span>{{ i18n.t('lesson.interactive_diagram') }} {{ block.content }}</span>
                     </div>
                   </div>
                 }
@@ -61,7 +61,7 @@ import { Lesson, ContentBlock, QuizQuestion } from '../../core/models/learning.m
                   <div class="agent-demo-block">
                     <div class="demo-header">
                       <span>🤖</span>
-                      <span>Interactive Agent Demo</span>
+                      <span>{{ i18n.t('lesson.interactive_demo') }}</span>
                     </div>
                     <div class="demo-content">
                       <button class="run-demo-btn" (click)="runDemo(block.content)">
@@ -93,7 +93,7 @@ import { Lesson, ContentBlock, QuizQuestion } from '../../core/models/learning.m
                   <div class="interactive-block">
                     <div class="interactive-placeholder">
                       <span>🎮</span>
-                      <span>Interactive Exercise: {{ block.metadata?.['type'] || block.content }}</span>
+                      <span>{{ i18n.t('lesson.interactive_exercise') }} {{ block.metadata?.['type'] || block.content }}</span>
                     </div>
                   </div>
                 }
